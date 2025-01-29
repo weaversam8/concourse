@@ -196,6 +196,7 @@ type StepVisitor interface {
 	VisitLoadVar(*LoadVarStep) error
 	VisitTry(*TryStep) error
 	VisitDo(*DoStep) error
+	VisitPrompt(*PromptStep) error
 	VisitInParallel(*InParallelStep) error
 	VisitAcross(*AcrossStep) error
 	VisitTimeout(*TimeoutStep) error
@@ -285,6 +286,10 @@ var StepPrecedence = []StepDetector{
 	{
 		Key: "do",
 		New: func() StepConfig { return &DoStep{} },
+	},
+	{
+		Key: "prompt",
+		New: func() StepConfig { return &PromptStep{} },
 	},
 	{
 		Key: "in_parallel",
@@ -402,6 +407,14 @@ type LoadVarStep struct {
 
 func (step *LoadVarStep) Visit(v StepVisitor) error {
 	return v.VisitLoadVar(step)
+}
+
+type PromptStep struct {
+	Name string `json:"prompt"`
+}
+
+func (step *PromptStep) Visit(v StepVisitor) error {
+	return v.VisitPrompt(step)
 }
 
 type TryStep struct {

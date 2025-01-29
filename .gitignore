@@ -1,6 +1,7 @@
 .DS_Store
 .idea
 .vscode
+.tool-versions
 *.iml
 node_modules
 .yarn

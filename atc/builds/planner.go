@@ -286,6 +286,12 @@ func (visitor *planVisitor) VisitLoadVar(step *atc.LoadVarStep) error {
 	return nil
 }
 
+func (visitor *planVisitor) VisitPrompt(step *atc.PromptStep) error {
+	// TODO: add a plan step here
+
+	return nil
+}
+
 func (visitor *planVisitor) VisitTry(step *atc.TryStep) error {
 	err := step.Step.Config.Visit(visitor)
 	if err != nil {

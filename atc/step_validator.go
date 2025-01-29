@@ -259,6 +259,25 @@ func (validator *StepValidator) VisitLoadVar(step *LoadVarStep) error {
 	return nil
 }
 
+func (validator *StepValidator) VisitPrompt(step *PromptStep) error {
+	validator.pushContext(".prompt(%s)", step.Name)
+	defer validator.popContext()
+
+	warning, err := ValidateIdentifier(step.Name, validator.context...)
+	if err != nil {
+		validator.recordError(err.Error())
+	}
+	if warning != nil {
+		validator.recordWarning(*warning)
+	}
+
+	validator.declareLocalVar(step.Name)
+
+	// TODO: add validation for other prompt fields
+
+	return nil
+}
+
 func (validator *StepValidator) VisitTry(step *TryStep) error {
 	validator.pushContext(".try")
 	defer validator.popContext()
