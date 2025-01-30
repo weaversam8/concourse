@@ -108,6 +108,9 @@ init buildId hl resources plan =
         Concourse.BuildStepLoadVar _ ->
             step |> initBottom buildId hl resources plan LoadVar
 
+        Concourse.BuildStepPrompt _ ->
+            step |> initBottom buildId hl resources plan Prompt
+
         Concourse.BuildStepAggregate plans ->
             initMultiStep buildId hl resources plan.id Aggregate plans Nothing
 
@@ -595,6 +598,9 @@ viewTree session model tree depth =
             viewStep model session depth stepId
 
         LoadVar stepId ->
+            viewStep model session depth stepId
+
+        Prompt stepId ->
             viewStep model session depth stepId
 
         Try subTree ->
@@ -1262,6 +1268,9 @@ viewStepHeader step =
         Concourse.BuildStepLoadVar name ->
             simpleHeader "load_var:" Nothing name
 
+        Concourse.BuildStepPrompt name ->
+            simpleHeader "prompt:" Nothing name
+
         Concourse.BuildStepCheck name _ ->
             simpleHeader "check:" Nothing name
 
@@ -1327,6 +1336,9 @@ stepName header =
             Just name
 
         Concourse.BuildStepLoadVar name ->
+            Just name
+
+        Concourse.BuildStepPrompt name ->
             Just name
 
         Concourse.BuildStepArtifactInput name ->

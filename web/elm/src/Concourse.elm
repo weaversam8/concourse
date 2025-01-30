@@ -399,6 +399,9 @@ mapBuildPlan fn plan =
                 BuildStepLoadVar _ ->
                     []
 
+                BuildStepPrompt _ ->
+                    []
+
                 BuildStepArtifactInput _ ->
                     []
 
@@ -489,6 +492,7 @@ type BuildStep
     = BuildStepTask StepName
     | BuildStepSetPipeline StepName InstanceVars
     | BuildStepLoadVar StepName
+    | BuildStepPrompt StepName
     | BuildStepArtifactInput StepName
     | BuildStepCheck StepName (Maybe ImageBuildPlans)
     | BuildStepGet StepName (Maybe ResourceName) (Maybe Version) (Maybe ImageBuildPlans)
@@ -706,6 +710,8 @@ decodeBuildPlan =
                     lazy (\_ -> decodeBuildSetPipeline)
                 , Json.Decode.field "load_var" <|
                     lazy (\_ -> decodeBuildStepLoadVar)
+                , Json.Decode.field "prompt" <|
+                    lazy (\_ -> decodeBuildStepPrompt)
                 , Json.Decode.field "across" <|
                     lazy (\_ -> decodeBuildStepAcross)
                 ]
@@ -860,6 +866,11 @@ decodeBuildStepLoadVar =
     Json.Decode.succeed BuildStepLoadVar
         |> andMap (Json.Decode.field "name" Json.Decode.string)
 
+
+decodeBuildStepPrompt : Json.Decode.Decoder BuildStep
+decodeBuildStepPrompt =
+    Json.Decode.succeed BuildStepPrompt
+        |> andMap (Json.Decode.field "name" Json.Decode.string)
 
 decodeBuildStepAcross : Json.Decode.Decoder BuildStep
 decodeBuildStepAcross =

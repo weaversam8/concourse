@@ -52,6 +52,7 @@ type StepTree
     | Put StepID
     | SetPipeline StepID
     | LoadVar StepID
+    | Prompt StepID
     | ArtifactInput StepID
     | ArtifactOutput StepID
     | Aggregate (Array StepTree)
@@ -287,6 +288,9 @@ activeStepIds model tree =
         LoadVar stepId ->
             [ stepId ]
 
+        Prompt stepId ->
+            [ stepId ]
+
         Aggregate trees ->
             List.concatMap (activeStepIds model) (Array.toList trees)
 
@@ -363,6 +367,9 @@ updateTreeNodeAt id fn tree =
             updateSelf stepId
 
         LoadVar stepId ->
+            updateSelf stepId
+
+        Prompt stepId ->
             updateSelf stepId
 
         Aggregate trees ->
