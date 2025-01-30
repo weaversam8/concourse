@@ -287,7 +287,9 @@ func (visitor *planVisitor) VisitLoadVar(step *atc.LoadVarStep) error {
 }
 
 func (visitor *planVisitor) VisitPrompt(step *atc.PromptStep) error {
-	// TODO: add a plan step here
+	visitor.plan = visitor.planFactory.NewPlan(atc.PromptPlan{
+		Name: step.Name,
+	})
 
 	return nil
 }

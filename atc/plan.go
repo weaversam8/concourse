@@ -11,6 +11,7 @@ type Plan struct {
 	Run         *RunPlan         `json:"run,omitempty"`
 	SetPipeline *SetPipelinePlan `json:"set_pipeline,omitempty"`
 	LoadVar     *LoadVarPlan     `json:"load_var,omitempty"`
+	Prompt      *PromptPlan      `json:"prompt,omitempty"`
 
 	Do         *DoPlan         `json:"do,omitempty"`
 	InParallel *InParallelPlan `json:"in_parallel,omitempty"`
@@ -395,6 +396,10 @@ type LoadVarPlan struct {
 	File   string `json:"file"`
 	Format string `json:"format,omitempty"`
 	Reveal bool   `json:"reveal,omitempty"`
+}
+
+type PromptPlan struct {
+	Name string `json:"name"`
 }
 
 type RetryPlan []Plan

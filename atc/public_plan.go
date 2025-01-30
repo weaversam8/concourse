@@ -20,6 +20,7 @@ func (plan *Plan) Public() *json.RawMessage {
 		Run            *json.RawMessage `json:"run,omitempty"`
 		SetPipeline    *json.RawMessage `json:"set_pipeline,omitempty"`
 		LoadVar        *json.RawMessage `json:"load_var,omitempty"`
+		Prompt         *json.RawMessage `json:"prompt,omitempty"`
 		OnAbort        *json.RawMessage `json:"on_abort,omitempty"`
 		OnError        *json.RawMessage `json:"on_error,omitempty"`
 		Ensure         *json.RawMessage `json:"ensure,omitempty"`
@@ -73,6 +74,10 @@ func (plan *Plan) Public() *json.RawMessage {
 
 	if plan.LoadVar != nil {
 		public.LoadVar = plan.LoadVar.Public()
+	}
+
+	if plan.Prompt != nil {
+		public.Prompt = plan.Prompt.Public()
 	}
 
 	if plan.OnAbort != nil {
@@ -318,6 +323,14 @@ func (plan SetPipelinePlan) Public() *json.RawMessage {
 }
 
 func (plan LoadVarPlan) Public() *json.RawMessage {
+	return enc(struct {
+		Name string `json:"name"`
+	}{
+		Name: plan.Name,
+	})
+}
+
+func (plan PromptPlan) Public() *json.RawMessage {
 	return enc(struct {
 		Name string `json:"name"`
 	}{
