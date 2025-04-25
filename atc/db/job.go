@@ -109,6 +109,8 @@ type Job interface {
 
 	SetHasNewInputs(bool) error
 	HasNewInputs() bool
+
+	HasPrompts() (bool, error)
 }
 
 var jobsQuery = psql.Select(
@@ -192,6 +194,27 @@ func (j *job) SetHasNewInputs(hasNewInputs bool) error {
 	}
 
 	return nil
+}
+
+func (j *job) HasPrompts() (bool, error) {
+	config, err := j.Config()
+
+	if err != nil {
+		return false, err
+	}
+
+	for _, step := range config.PlanSequence {
+		stepConf := step.Config
+		
+		switch stepConf.(type) {
+			case *atc.PromptStep:
+				return true, nil
+			default:
+				continue
+		}
+	}
+
+	return false, nil
 }
 
 type Jobs []Job

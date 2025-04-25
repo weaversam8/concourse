@@ -19,6 +19,8 @@ func (s *Server) CreateJobBuild(pipeline db.Pipeline) http.Handler {
 
 		jobName := r.FormValue(":job_name")
 
+		// TODO: need to parse vars submitted from body
+
 		job, found, err := pipeline.Job(jobName)
 		if err != nil {
 			logger.Error("failed-to-get-job", err)
@@ -33,6 +35,20 @@ func (s *Server) CreateJobBuild(pipeline db.Pipeline) http.Handler {
 
 		if job.DisableManualTrigger() {
 			w.WriteHeader(http.StatusConflict)
+			return
+		}
+
+		// check if the job has required arguments
+		hasPrompts, err := job.HasPrompts()
+		if err != nil {
+			logger.Error("failed-to-check-job-prompts", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		if hasPrompts {
+			logger.Error("missing-prompts", nil)
+			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 

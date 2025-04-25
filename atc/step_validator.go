@@ -260,7 +260,7 @@ func (validator *StepValidator) VisitLoadVar(step *LoadVarStep) error {
 }
 
 func (validator *StepValidator) VisitPrompt(step *PromptStep) error {
-	validator.pushContext(".prompt(%s)", step.Name)
+	validator.pushContextf(".prompt(%s)", step.Name)
 	defer validator.popContext()
 
 	warning, err := ValidateIdentifier(step.Name, validator.context...)
